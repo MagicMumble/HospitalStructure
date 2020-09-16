@@ -46,7 +46,7 @@ full_name           char(60) not null,
 data_of_birth       date     not null,
 phone_number        char(15) null,
 years_of_experience int      null check (years_of_experience >= 0),
-hospital_ID         int CONSTRAINT FK_HOSPITAL_doctors_ID FOREIGN KEY(hospital_ID) REFERENCES Hospital --если удаляется больница, то удаляются и все врачи в ней
+hospital_ID         int CONSTRAINT FK_HOSPITAL_doctors_ID FOREIGN KEY(hospital_ID) REFERENCES Hospital 
                                          -- ON DELETE cascade ON UPDATE CASCADE
 );
 
@@ -125,7 +125,7 @@ SELECT a.patient_ID AS patient, a.surgery_time as sur_time FROM Appointment as a
 DELETE FROM Hospital WHERE hospital_ID = 3
 select * from Hospital 
 
-INSERT INTO Connection_surgery_doctor(appointment_ID)   --каждая операция кем-то проводится
+INSERT INTO Connection_surgery_doctor(appointment_ID)   
 	SELECT appointment_ID FROM Appointment
 UPDATE Connection_surgery_doctor SET doctor_ID = 4  WHERE appointment_ID = 1
 UPDATE Connection_surgery_doctor SET doctor_ID = 3  WHERE appointment_ID = 2
@@ -143,7 +143,7 @@ GO
 
 SELECT * FROM new_view 
 SELECT COUNT(doctor_ID) as how_many_doctors_work_there, hospital_ID FROM Doctors group by hospital_ID 
-having  COUNT(doctor_ID) < 3 ORDER BY COUNT(doctor_ID) ASC;     --в каком госпитале нехватка докторов!!! Надо нанимать новых срочно
+having  COUNT(doctor_ID) < 3 ORDER BY COUNT(doctor_ID) ASC;    
 
 IF OBJECT_ID ('new_view2', 'V') IS NOT NULL  
    DROP VIEW new_view2;  
@@ -187,7 +187,7 @@ DROP PROCEDURE my_proc;
 GO
 CREATE PROCEDURE my_proc as
 	select doctor_ID, full_name, dbo.ages(Doctors.data_of_birth) as ages, phone_number from Doctors 
-	where dbo.ages(Doctors.data_of_birth)>40                      --врачи, кот-ым больше 40 лет
+	where dbo.ages(Doctors.data_of_birth)>40                      --ГўГ°Г Г·ГЁ, ГЄГ®ГІ-Г»Г¬ ГЎГ®Г«ГјГёГҐ 40 Г«ГҐГІ
 go
 execute my_proc
 go
@@ -198,8 +198,8 @@ select Doctors.doctor_ID, Doctors.full_name, Doctors.data_of_birth, Hospital.hos
 SELECT Doctors.doctor_ID, Doctors.full_name
 FROM Doctors
 
-union                                                --intersect  выведет одинаковые записи, их нет, а except все записи из 
-													 --первой выборки, не включая вторую выборку, в моём случае то же самое как и при union
+union                                                --intersect  ГўГ»ГўГҐГ¤ГҐГІ Г®Г¤ГЁГ­Г ГЄГ®ГўГ»ГҐ Г§Г ГЇГЁГ±ГЁ, ГЁГµ Г­ГҐГІ, Г  except ГўГ±ГҐ Г§Г ГЇГЁГ±ГЁ ГЁГ§ 
+													 --ГЇГҐГ°ГўГ®Г© ГўГ»ГЎГ®Г°ГЄГЁ, Г­ГҐ ГўГЄГ«ГѕГ·Г Гї ГўГІГ®Г°ГіГѕ ГўГ»ГЎГ®Г°ГЄГі, Гў Г¬Г®ВёГ¬ Г±Г«ГіГ·Г ГҐ ГІГ® Г¦ГҐ Г±Г Г¬Г®ГҐ ГЄГ ГЄ ГЁ ГЇГ°ГЁ union
 													 --UNION removes duplicate rows.
                                                      --UNION ALL does not remove duplicate rows.
 SELECT Hospital.hospital_ID, Hospital.hospital_name
